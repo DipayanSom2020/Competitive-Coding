@@ -1,0 +1,117 @@
+// Problem Link : https://www.codechef.com/AUG19B/problems/ZOMCAV
+// Problem Description :
+// There are N caves in a row, numbered 1 through N. For each valid i, the radiation power in the i-th cave is Ci. Originally, the radiation level in each cave was 0. Then, for each valid i, the radiation power in cave i increased the radiation levels in the caves i−Ci,…,i+Ci inclusive (if they exist) by 1, so all the caves are radioactive now.
+
+// Radiation is not the only problem, though. There are also N zombies with health levels H1,H2,…,HN. You want to kill all of them by getting them to the caves in such a way that there is exactly one zombie in each cave. A zombie dies in a cave if and only if the radiation level in that cave is equal to the health level of the zombie. Is it possible to kill all the zombies?
+
+// Input
+// The first line of the input contains a single integer T denoting the number of test cases. The description of T test cases follows.
+// The first line of each test case contains a single integer N.
+// The second line contains N space-separated integers C1,C2,…,CN.
+// The third line contains N space-separated integers H1,H2,…,HN.
+// Output
+// For each test case, print a single line containing the string "YES" if it is possible to kill all the zombies or "NO" if it is impossible (without quotes).
+
+// Constraints
+// 1≤T≤100
+// 1≤N≤105
+// 1≤Ci,Hi≤109 for each valid i
+// Subtasks
+// Subtask #1 (30 points): 1≤N≤1,000
+// Subtask #2 (70 points): original constraints
+
+// Sample Input 1 
+// 2
+// 5
+// 1 2 3 4 5
+// 1 2 3 4 5
+// 5
+// 1 2 3 4 5
+// 5 4 3 4 5
+// Sample Output 1 
+// NO
+// YES
+// Explanation
+// In both example test cases, the final radiation levels in the caves are (5,5,4,4,3). For example, the radiation power in cave 1 increased the radiation levels in caves 1 and 2 (there is no cave 0) by 1, and the radiation power in cave 4 increased the radiation levels in all caves by 1.
+
+#include<bits/stdc++.h>
+#define ull  long long
+using namespace std;
+
+struct abc {
+    int l,r;
+};
+void func(int arr[], struct abc cross[],
+                  int n, int value, int fg,vector<ull int> h)
+{
+    int s[n];
+    memset(s, 0, sizeof(s));
+
+    for (int i = 0; i < value; i++) {
+        s[cross[i].l] += fg;
+
+        if ((cross[i].r + 1) < n)
+            s[cross[i].r + 1] -= fg;
+    }
+
+ 
+    arr[0] += s[0];
+    for (int i = 1; i < n; i++) {
+        s[i] += s[i - 1];
+        arr[i] += s[i];
+    }
+
+        vector<ull int> vec(arr,arr+n);
+        sort(vec.begin(),vec.end());
+        if(vec==h)
+            cout<<"YES"<<endl;
+        else
+            cout<<"NO"<<endl;
+
+
+}
+
+
+int main()
+{
+      ull int t;
+      cin>>t;
+      while(t--)
+      {
+          ull int n,j,i,temp;
+          cin>>n;
+          vector<ull int> c;
+          vector<ull int> h;
+          vector<ull int> r;
+          for(i=0;i<n;i++)
+          {
+              cin>>temp;
+              c.push_back(temp);
+              r.push_back(0);
+          }
+          for(i=0;i<n;i++)
+          {
+              cin>>temp;
+              h.push_back(temp);
+          }
+          struct abc arr[n];
+          for(i=0;i<n;i++)
+          {
+              struct abc q;
+              q.l=(i-c[i])<0?0:(i-c[i]);
+              q.r=(i+c[i])>=n?n-1:(i+c[i]);
+
+              arr[i]=q;
+          }
+//          for(i=0;i<n;i++)
+//          {
+//              cout<<arr[i].start<<" "<<arr[i].end<<endl;
+//          }
+            int initalArray[n]={0};
+            sort(h.begin(),h.end());
+            func(initalArray,arr,n,n,1,h);
+
+
+      }
+
+}
